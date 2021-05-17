@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "e:\\Anaconda\\anaconda\\python.exe"
+    "python.linting.flake8Args": ["--max-line-length=120" ]
+}

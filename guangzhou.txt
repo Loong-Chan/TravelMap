@@ -1,0 +1,50 @@
+18
+Huangcun
+Chebei
+Chebeinan
+Wanshengwei
+Guanzhou
+Higher Education Mega Center N.
+Higher Education Mega Center S.
+Xinzao
+Pazhou
+Xingangdong
+Modiesha
+Dongpu
+Keyun Lu
+Yuancun
+Tancun
+Tianhe Park
+Tangdong
+Daguannanlu
+4
+Line 4
+8
+Huangcun
+Chebei
+Chebeinan
+Wanshengwei
+Guanzhou
+Higher Education Mega Center N.
+Higher Education Mega Center S.
+Xinzao
+Line 5
+5
+Dongpu
+Chebeinan
+Keyun Lu
+Yuancun
+Tancun
+Line 21
+5
+Yuancun
+Tianhe Park
+Tangdong
+Huangcun
+Daguannanlu
+Line 8
+4
+Wanshengwei
+Pazhou
+Xingangdong
+Modiesha
