@@ -7,6 +7,8 @@
 # 4.我还在考虑是否能把这个控制类写成装饰类
 # 5.现在在目前功能需求非常简单的时候，这个类显得非常鸡肋
 
+from SPCaculator import SPCaculator
+
 
 class SPCaculatorController:
     """最短路径计算器的控制器"""

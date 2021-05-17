@@ -1,3 +1,8 @@
+from Line import Line
+from Station import Station
+from SPCaculatorController import SPCaculatorController
+
+
 # 地铁
 class Metro:
     """地铁类"""
@@ -151,3 +156,8 @@ class Metro:
             print("%s-->" % (self._stations[s].getName()), end="")
         print("\b\b\b   ")
         print("weight: %d" % weight)
+
+
+if __name__ == "__main__":
+    guangzhou = Metro("./guangzhou.txt")
+    guangzhou.findPath("Chebei", "Chebeinan")
