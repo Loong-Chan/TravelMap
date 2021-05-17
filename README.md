@@ -8,6 +8,6 @@
 7. 装进容器内？
 8. 可以把接口留好，但是不要过度设计！
 
-flyod系统
+flyod算法（带记录文件路径）
 https://blog.csdn.net/weixin_39956356/article/details/80620667?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
 

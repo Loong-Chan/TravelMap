@@ -2,6 +2,9 @@
 # 而且可以分管理员模式和普通用户模式，普通用户只能查询，管理员可以添加修改，可以同时多个用户操作，但是只能有一个管理员操作
 
 
+from Metro import Metro
+import os
+
 class MetroConsole:
     def __init__(self) -> None:
         self._administrator = False
@@ -9,4 +12,11 @@ class MetroConsole:
         self.console()
 
     def console(self) -> None:
-        pass
+        os.system("cls")
+        print("**************************")
+        print("*       Travel Map       *")
+        print("**************************")
+
+
+if __name__ == "__main__":
+    MetroConsole()
