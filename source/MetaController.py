@@ -2,15 +2,22 @@ import json
 import time
 from os import getcwd
 
-MetaFilePath = "./META.json"
+
+def getProjectPath(currentPath: str = getcwd(), mainFolder: str = "TravelMap") -> str:
+    path = getcwd().replace("\\", "/")
+    pos = path.rfind(mainFolder)
+    return path[:pos] + mainFolder
+
+
+MetaFilePath = getProjectPath() + "/META.json"
 
 # 这个类也要是单例类才可以
 
 
 class MetaController:
-    def __init__(self) -> None:
+    def __init__(self, metaPath: str = MetaFilePath) -> None:
         self._modify = False
-        self._metaFilePath = MetaFilePath
+        self._metaFilePath = metaPath
         with open(self._metaFilePath, "r", encoding="utf-8") as mFile:
             self._meta = json.loads(mFile.read())
 
@@ -43,4 +50,4 @@ class MetaController:
 
 
 if __name__ == "__main__":
-    print(getcwd())
+    print(MetaFilePath)

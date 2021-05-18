@@ -38,7 +38,6 @@ class MetroConsole:
             else:
                 os.system("cls")
 
-
     def printStr(self, string: str, shift: int = None) -> None:
         """格式化输出一行，其中shift指从左往右的位移，默认居中"""
         # 计算左空格数
