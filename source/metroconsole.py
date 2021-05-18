@@ -101,7 +101,7 @@ class MetroConsole:
         self._isAdmin = False
         return True
 
-    def operExit(self, args: list) -> bool:
+    def operExit(self, args: list) -> None:
         exit(0)
 
     def operDefault(self, args: list) -> bool:
