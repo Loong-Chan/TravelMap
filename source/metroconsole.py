@@ -18,25 +18,26 @@ class MetroConsole:
         self._file = None
         self._meta = MetaController()
         self._isAdmin = False
+        self._vaildOperMain = {"admin": self.operAdmin, "user": self.operUser, "exit": self.operExit}
+        self._vaildOperAdmin = {"logout": None, "list": None, "open": None, "query": None}
+        self._vaildOperUser = {"logout": None, "list": None, "new": None, "add": None, "save": None,
+                               "open": None, "create": None, "query": None}
         # 运行控制台
         self.console()
 
     def console(self) -> None:
         # 首界面
         while(True):
+            os.system("cls")
             self.printMeta()
-            print(" Please select the operation Mode(u/a):", end="")
-            mode = input()
-            if mode == "a":
-                print("password:", end="")
-                if input() == MetroConsole.password:
-                    print("hello!")
-                    break
-            elif mode == "u":
-                print("fuck you.")
+            print(" Please select the operation Mode(user/admin):", end="")
+            oper, args = self.inputOper()
+            if self.dispatcher(oper, args, self._vaildOperMain):
                 break
-            else:
-                os.system("cls")
+        # 操作介绍界面
+        os.system("cls")
+        self.printHint()
+        oper = input()
 
     def printStr(self, string: str, shift: int = None) -> None:
         """格式化输出一行，其中shift指从左往右的位移，默认居中"""
@@ -53,15 +54,62 @@ class MetroConsole:
         print("*" + " " * blankLenL + string + " " * blankLenR + "*")
 
     def printMeta(self) -> None:
-        os.system("cls")
+        """输出主界面中的软件的元信息"""
         print("*" * MetroConsole.consoleWidth)
         print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
         self.printStr(self._meta.getNameEN())
         self.printStr("developer: " + self._meta.getDeveloper())
-        self.printStr("version: " + self._meta.getVersion())
+        self.printStr("code version: " + self._meta.getCodeVersion())
+        self.printStr("data version: " + self._meta.getDataVersion())
         print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
         print("*" * MetroConsole.consoleWidth)
+
+    def printHint(self) -> None:
+        """输出使用界面中的提示操作信息"""
+        print("*" * MetroConsole.consoleWidth)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
+        self.printStr("logout: lot out and return to the main interface", 5)
+        self.printStr(
+            "list  : list the infomation of the designated station or line", 5)
+        self.printStr("new   : build a new station or line", 5)
+        self.printStr("add   : add a station to a line:", 5)
+        self.printStr("save  : save the latest data to a file", 5)
+        self.printStr("open  : open an existing data file", 5)
+        self.printStr("create: create a new data file", 5)
+        self.printStr("query : query the line between any station", 5)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
+        print("*" * MetroConsole.consoleWidth)
+        print(" enter you operation:", end="")
+
+    def inputOper(self) -> list:
+        '''从键盘读取一次操作及其参数'''
+        paras = [p.strip() for p in input().split(" -")]
+        return paras[0], paras[1:]
+
+    def dispatcher(self, oper: str, args: list, vaildOper: dict) -> bool:
+        """通过分派器把对应的操作和参数分派给指定函数执行"""
+        if oper not in vaildOper:
+            return self.operDefault(args)
+        else:
+            return vaildOper[oper](args)
+
+    def operAdmin(self, args: list) -> bool:
+        self._isAdmin = True
+        return True
+
+    def operUser(self, args: list) -> bool:
+        self._isAdmin = False
+        return True
+
+    def operExit(self, args: list) -> bool:
+        exit(0)
+
+    def operDefault(self, args: list) -> bool:
+        return False
+
+
 
 
 if __name__ == "__main__":
     MetroConsole()
+

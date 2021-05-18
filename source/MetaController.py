@@ -4,7 +4,7 @@ from os import getcwd
 
 
 def getProjectPath(currentPath: str = getcwd(), mainFolder: str = "TravelMap") -> str:
-    path = getcwd().replace("\\", "/")
+    path = currentPath.replace("\\", "/")
     pos = path.rfind(mainFolder)
     return path[:pos] + mainFolder
 
@@ -39,8 +39,11 @@ class MetaController:
     def getDeveloper(self) -> None:
         return self._meta["developer"]
 
-    def getVersion(self) -> None:
-        return self._meta["version"]
+    def getCodeVersion(self) -> None:
+        return self._meta["code version"]
+
+    def getDataVersion(self) -> None:
+        return self._meta["data version"]
 
     def getLastUpdate(self) -> None:
         return self._meta["Last update"]
