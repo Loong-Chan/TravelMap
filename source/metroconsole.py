@@ -39,14 +39,16 @@ class MetroConsole:
             oper, args = self.inputOper()
             if self.dispatcher(oper, args, self._vaildOperMain):
                 break
-        # 操作介绍界面
+        # 主要操作界面
+        os.system("cls")
+        self.printHint()
+        print(" enter you operation:", end="")
         while(True):
+            oper, args = self.inputOper()
             os.system("cls")
             self.printHint()
-            oper, args = self.inputOper()
             self.dispatcher(oper, args, self._vaildOperUser)
-            print("press any key to continue...", end="")
-            input()  # 用户输入任意键清空，然后再次输入
+            print(" enter you operation:", end="")
 
     def printStr(self, string: str, shift: int = None) -> None:
         """格式化输出一行，其中shift指从左往右的位移，默认居中"""
@@ -88,7 +90,6 @@ class MetroConsole:
         self.printStr("query : query the line between any station", 5)
         print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
         print("*" * MetroConsole.consoleWidth)
-        print(" enter you operation:", end="")
 
     def inputOper(self) -> list:
         '''从键盘读取一次操作及其参数'''
@@ -119,38 +120,48 @@ class MetroConsole:
     def operLoad(self, args: list) -> bool:
 
         if self._file is not None:
-            print("you have already opened a file.")
+            print(" you have already opened a file.")
             return False
 
         filePath = getProjectPath() + "/citys/{}.txt".format(args[0])
         if not os.path.exists(filePath):
-            print("file doesn't exist.")
+            print(" file doesn't exist.")
             return False
 
+        print(" load data from file: {}...".format(filePath), end="")
         self._metro = Metro(filePath)
-        print("load city:{} from file:{} done.".format(args[0], filePath))
+        print(" done!")
         return True
 
+    # 目前还没想好怎么具体的实现登出时页面的切换
     def operLogout(self, args: list) -> bool:
-        pass
+        exit(0)
 
     def operList(self, args: list) -> bool:
+
         stationNames = self._metro.getStationsName()
         lineNames = self._metro.getLinesName()
         stationOrder = self._metro.getStationOrder()
+        print("*" * MetroConsole.consoleWidth)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
         for i in range(len(lineNames)):
-            print(lineNames[i])
+            self.printStr("line: {}".format(lineNames[i]), 5)
             for j in stationOrder[i]:
-                print(stationNames[j], end=" ")
+                self.printStr("{}-->".format(stationNames[j]), 10)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
+        print("*" * MetroConsole.consoleWidth)
         return True
 
     def operQuery(self, args: list) -> bool:
         stationNames = self._metro.getStationsName()
         path, weight = self._metro.findPath(args[0], args[1])
-        print(weight)
+        print("*" * MetroConsole.consoleWidth)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
+        self.printStr("You need to take {} stops in the subway".format(weight), 5)
         for s in path:
-            print(stationNames[s], end="-->")
-        print("\b\b\b   ")
+            self.printStr("{}-->".format(stationNames[s]), 10)
+        print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
+        print("*" * MetroConsole.consoleWidth)
         return True
 
 

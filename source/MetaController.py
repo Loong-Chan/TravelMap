@@ -45,6 +45,15 @@ class MetaController:
     def getGithubAddress(self) -> None:
         return self._meta["github address"]
 
+    def update(self, item, newVaule) -> None:
+        if item not in self._meta:
+            print("no such item.")
+            return
+        self._meta[item] = newVaule
+        self._modify = True
+
 
 if __name__ == "__main__":
-    print(MetaFilePath)
+    mc = MetaController()
+    mc.update("code version", "0.0.1")
+    mc.update("data version", "0.0.1")
