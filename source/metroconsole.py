@@ -2,8 +2,10 @@
 # 而且可以分管理员模式和普通用户模式，普通用户只能查询，管理员可以添加修改，可以同时多个用户操作，但是只能有一个管理员操作
 
 
+from time import sleep
 from Metro import Metro
 from MetaController import MetaController
+from ProjectTools import getProjectPath
 from math import ceil
 import os
 
@@ -18,10 +20,13 @@ class MetroConsole:
         self._file = None
         self._meta = MetaController()
         self._isAdmin = False
-        self._vaildOperMain = {"admin": self.operAdmin, "user": self.operUser, "exit": self.operExit}
-        self._vaildOperAdmin = {"logout": None, "list": None, "open": None, "query": None}
-        self._vaildOperUser = {"logout": None, "list": None, "new": None, "add": None, "save": None,
-                               "open": None, "create": None, "query": None}
+        self._metro = None
+        self._vaildOperMain = {"admin": self.operAdmin,
+                               "user": self.operUser, "exit": self.operExit}
+        self._vaildOperUser = {"logout": self.operLogout, "list": self.operList,
+                               "load": self.operLoad, "query": self.operQuery}
+        self._vaildOperAdmin = {"logout": None, "list": None, "new": None, "add": None, "save": None,
+                                "load": None, "create": None, "query": None}
         # 运行控制台
         self.console()
 
@@ -35,9 +40,13 @@ class MetroConsole:
             if self.dispatcher(oper, args, self._vaildOperMain):
                 break
         # 操作介绍界面
-        os.system("cls")
-        self.printHint()
-        oper = input()
+        while(True):
+            os.system("cls")
+            self.printHint()
+            oper, args = self.inputOper()
+            self.dispatcher(oper, args, self._vaildOperUser)
+            print("press any key to continue...", end="")
+            input()  # 用户输入任意键清空，然后再次输入
 
     def printStr(self, string: str, shift: int = None) -> None:
         """格式化输出一行，其中shift指从左往右的位移，默认居中"""
@@ -74,7 +83,7 @@ class MetroConsole:
         self.printStr("new   : build a new station or line", 5)
         self.printStr("add   : add a station to a line:", 5)
         self.printStr("save  : save the latest data to a file", 5)
-        self.printStr("open  : open an existing data file", 5)
+        self.printStr("load  : load an existing data file", 5)
         self.printStr("create: create a new data file", 5)
         self.printStr("query : query the line between any station", 5)
         print("*" + " " * (MetroConsole.consoleWidth - 2) + "*")
@@ -107,9 +116,45 @@ class MetroConsole:
     def operDefault(self, args: list) -> bool:
         return False
 
+    def operLoad(self, args: list) -> bool:
 
+        if self._file is not None:
+            print("you have already opened a file.")
+            return False
+
+        filePath = getProjectPath() + "/citys/{}.txt".format(args[0])
+        if not os.path.exists(filePath):
+            print("file doesn't exist.")
+            return False
+
+        self._metro = Metro(filePath)
+        print("load city:{} from file:{} done.".format(args[0], filePath))
+        return True
+
+    def operLogout(self, args: list) -> bool:
+        pass
+
+    def operList(self, args: list) -> bool:
+        stationNames = self._metro.getStationsName()
+        lineNames = self._metro.getLinesName()
+        stationOrder = self._metro.getStationOrder()
+        for i in range(len(lineNames)):
+            print(lineNames[i])
+            for j in stationOrder[i]:
+                print(stationNames[j], end=" ")
+        return True
+
+    def operQuery(self, args: list) -> bool:
+        stationNames = self._metro.getStationsName()
+        path, weight = self._metro.findPath(args[0], args[1])
+        print(weight)
+        for s in path:
+            print(stationNames[s], end="-->")
+        print("\b\b\b   ")
+        return True
 
 
 if __name__ == "__main__":
     MetroConsole()
 
+# 考虑使用装饰器

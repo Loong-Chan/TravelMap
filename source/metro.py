@@ -132,6 +132,12 @@ class Metro:
         """返回以数组形式存储的铁路站点信息"""
         return self._stationOrder
 
+    def getStationsName(self) -> list:
+        return [station.getName() for station in self._stations]
+
+    def getLinesName(self) -> list:
+        return [line.getName() for line in self._lines]
+
     def getStationCount(self) -> int:
         """返回站点总数"""
         return self._stationCount
@@ -149,13 +155,7 @@ class Metro:
             self._caculator.loadCaculator("MetroLines", self._stationOrder, self._stationCount)
         no1 = self._stationNameToNumber[stationName1]
         no2 = self._stationNameToNumber[stationName2]
-        path, weight = self._caculator.getShortestPath(no1, no2)
-        print("from %s to %s:" % (stationName1, stationName2))
-        print("path: ", end="")
-        for s in path:
-            print("%s-->" % (self._stations[s].getName()), end="")
-        print("\b\b\b   ")
-        print("weight: %d" % weight)
+        return self._caculator.getShortestPath(no1, no2)
 
 
 if __name__ == "__main__":
