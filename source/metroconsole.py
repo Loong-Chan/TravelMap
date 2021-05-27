@@ -108,6 +108,10 @@ class MetroConsole(Console):
 
     def operList(self, argList: list):
 
+        if self._file is None:
+            print(" You haven't opened a file yet.")
+            return None
+
         stationNames = self._metro.getStationsName()
         lineNames = self._metro.getLinesName()
         stationOrder = self._metro.getStationOrder()
@@ -122,19 +126,33 @@ class MetroConsole(Console):
     def operLoad(self, argList: list):
 
         if self._file is not None:
-            print(" you have already opened a file.")
-            return False
+            print(" You have already opened a file.")
+            return None
+
+        if len(argList) < 1:
+            print(" Wrong number of parameters.")
+            print(" Usage: load -<city name>")
+            return None
 
         filePath = getProjectPath() + "/citys/{}.txt".format(argList[0])
         if not os.path.exists(filePath):
-            print(" file doesn't exist.")
-            return False
+            print(" File doesn't exist.")
+            return None
 
-        print(" load data from file: {}...".format(filePath), end="")
+        print(" Load data from file: {}...".format(filePath), end="")
         self._metro = Metro(filePath)
         print(" done!")
 
     def operQuery(self, argList: list):
+
+        if self._file is None:
+            print(" You haven't opened a file yet.")
+            return None
+
+        if len(argList) < 2:
+            print(" Wrong number of parameters.")
+            print(" Usage: load -<station name 1> -<station name 2>")
+            return None
 
         stationNames = self._metro.getStationsName()
         path, weight = self._metro.findPath(argList[0], argList[1])
