@@ -42,8 +42,7 @@ class Metro:
         """创建新的站点"""
         # 有重名站点时不重新创建
         if stationName in self._stationNameToNumber:
-            print("warning: [%s] has existed." % (stationName))
-            return
+            raise Exception()
         self._stations.append(Station(stationName))
         self._stationNameToNumber[stationName] = self._stationCount
         self._stationCount += 1
@@ -54,8 +53,7 @@ class Metro:
         """创建新的线路"""
         # 有重名线路时不重新创建
         if lineName in self._lineNameToNumber:
-            print("warning: [%s] has existed." % (lineName))
-            return
+            raise Exception()
         self._lines.append(Line(lineName))
         self._lineNameToNumber[lineName] = self._lineCount
         self._lineCount += 1
@@ -67,24 +65,20 @@ class Metro:
         """把一个已有站点添加进一条已有线路中"""
         # 检查站点是否存在
         if stationName not in self._stationNameToNumber:
-            print("addStationToLine() error: no such station(%s)." % (stationName))
-            return
+            raise Exception()
         # 检查线路是否存在
         if lineName not in self._lineNameToNumber:
-            print("addStationToLine() error: no such line(%s)." % (lineName))
-            return
+            raise Exception()
         # 检查order是否合法
         lineNO = self._lineNameToNumber[lineName]
         if order is None:
             order = len(self._stationOrder[lineNO])
         if order < 0 or order > len(self._stationOrder[lineNO]):
-            print("addStationToLine() error: order illegal.")
-            return
+            raise Exception()
         # 检查该站点是否已经在该线路中
         stationNO = self._stationNameToNumber[stationName]
         if stationNO in self._stationOrder[lineNO]:
-            print("addStationToLine() error: %s has been in %s." % (stationName, lineName))
-            return
+            raise Exception()
         # 把该站点标记为该线路会经过的站点
         self._stationOrder[lineNO].insert(order, stationNO)
         # 通知最短路径计算器控制器：站点或者线路信息已发生更改
@@ -92,8 +86,6 @@ class Metro:
 
     def writeToFile(self, filePath: str) -> None:
         """把当前内存中的铁路信息写入文件中"""
-        # 文件中的数据会被全部覆盖
-        print("The original data in the file(%s) will be overwritten." % (filePath))
         # 写入信息
         with open(filePath, "w") as f:
             # 写入站点信息
@@ -156,6 +148,12 @@ class Metro:
         no1 = self._stationNameToNumber[stationName1]
         no2 = self._stationNameToNumber[stationName2]
         return self._caculator.getShortestPath(no1, no2)
+
+    @staticmethod
+    def initMetroFile(filePath: str) -> None:
+        with open(filePath, "w") as f:
+            f.write("0\n0\n")
+
 
 
 if __name__ == "__main__":

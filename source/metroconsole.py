@@ -13,7 +13,7 @@ class MetroConsole(Console):
 
         super(MetroConsole, self).__init__()
 
-        self._file = None
+        self._filePath = None
         self._meta = MetaController()
         self._metro = None
 
@@ -41,6 +41,7 @@ class MetroConsole(Console):
         self.addContentToBox("load  : load an existing data file", 5)
         self.addContentToBox("create: create a new data file", 5)
         self.addContentToBox("query : query the line between any station", 5)
+        self.addContentToBox("close : close the open file", 5)
         self.drawBox()
 
     def printUserHint(self) -> None:
@@ -66,9 +67,7 @@ class MetroConsole(Console):
     def pageUser(self, pageIndex: int) -> None:
 
         vaildOper = {"logout": self.operLogout, "list": self.operList,
-                     "new": self.operNew, "add": self.operAdd,
-                     "save": self.operSave, "load": self.operLoad,
-                     "create": self.operCreate, "query": self.operQuery}
+                     "load": self.operLoad, "query": self.operQuery}
 
         os.system("cls")
         self.printUserHint()
@@ -83,7 +82,10 @@ class MetroConsole(Console):
     def pageAdmin(self, pageIndex: int) -> None:
 
         vaildOper = {"logout": self.operLogout, "list": self.operList,
-                     "load": self.operLoad, "query": self.operQuery}
+                     "new": self.operNew, "add": self.operAdd,
+                     "save": self.operSave, "load": self.operLoad,
+                     "create": self.operCreate, "query": self.operQuery,
+                     "close": self.operClose}
 
         os.system("cls")
         self.printAdminHint()
@@ -108,7 +110,7 @@ class MetroConsole(Console):
 
     def operList(self, argList: list):
 
-        if self._file is None:
+        if self._metro is None:
             print(" You haven't opened a file yet.")
             return None
 
@@ -125,7 +127,7 @@ class MetroConsole(Console):
 
     def operLoad(self, argList: list):
 
-        if self._file is not None:
+        if self._metro is not None:
             print(" You have already opened a file.")
             return None
 
@@ -134,24 +136,25 @@ class MetroConsole(Console):
             print(" Usage: load -<city name>")
             return None
 
-        filePath = getProjectPath() + "/citys/{}.txt".format(argList[0])
-        if not os.path.exists(filePath):
+        self._filePath = getProjectPath() + "/citys/{}.txt".format(argList[0])
+        if not os.path.exists(self._filePath):
             print(" File doesn't exist.")
+            self._filePath = None
             return None
 
-        print(" Load data from file: {}...".format(filePath), end="")
-        self._metro = Metro(filePath)
+        print(" Load data from file: {}...".format(self._filePath), end="")
+        self._metro = Metro(self._filePath)
         print(" done!")
 
     def operQuery(self, argList: list):
 
-        if self._file is None:
+        if self._metro is None:
             print(" You haven't opened a file yet.")
             return None
 
         if len(argList) < 2:
             print(" Wrong number of parameters.")
-            print(" Usage: load -<station name 1> -<station name 2>")
+            print(" Usage: query -<station name 1> -<station name 2>")
             return None
 
         stationNames = self._metro.getStationsName()
@@ -164,16 +167,100 @@ class MetroConsole(Console):
         self.drawBox()
 
     def operNew(self, argList: list):
-        pass
+
+        if self._metro is None:
+            print(" You haven't opened a file yet.")
+            return None
+
+        if len(argList) < 2:
+            print(" Wrong number of parameters.")
+            print(" Usage: new -<s/l> -<station/line name>")
+            return None
+
+        if argList[0] not in ['s', 'l']:
+            print(" The first parameter must be 's' or 'l'.")
+            return None
+
+        if argList[0] == 's':
+            try:
+                self._metro.newStation(argList[1])
+            except Exception:
+                print(" The station has already exist.")
+                return None
+
+        if argList[0] == 'l':
+            try:
+                self._metro.newLine(argList[1])
+            except Exception:
+                print(" The line has already exist.")
+                return None
 
     def operAdd(self, argList: list):
-        pass
+
+        if self._metro is None:
+            print(" You haven't opened a file yet.")
+            return None
+
+        if len(argList) < 2:
+            print(" Wrong number of parameters.")
+            print(" Usage: add -<station name> -<line name> -<order(optional)>")
+            return None
+
+        try:
+            if len(argList) == 2:
+                self._metro.addStationToLine(argList[0], argList[1])
+            if len(argList) == 3:
+                self._metro.addStationToLine(argList[0], argList[1], argList[2])
+        except Exception:
+            print(" Error in information.")
+            return None
 
     def operSave(self, argList: list):
-        pass
+
+        if self._metro is None:
+            print(" You haven't opened a file yet.")
+            return None
+
+        self._metro.writeToFile(self._filePath)
+
+    def operClose(self, argList: list):
+
+        if self._metro is None:
+            print(" You haven't opened a file yet.")
+            return None
+
+        print(" Do you want to save the file? (y/n)", end="")
+        oper = input()
+
+        if oper not in ['y', 'n']:
+            print(" Colse fail.")
+            return None
+
+        if oper == 'y':
+            self.operSave(None)
+
+        self._metro = None
+        self._filePath = None
 
     def operCreate(self, argList: list):
-        pass
+
+        if self._metro is not None:
+            print(" You have already opened a file.")
+            return None
+
+        if len(argList) < 1:
+            print(" Wrong number of parameters.")
+            print(" Usage: add -<city name>")
+            return None
+
+        _path = getProjectPath() + "/citys/{}.txt".format(argList[0])
+        if os.path.exists(_path):
+            print(" File already exist.")
+            return None
+
+        open(_path, 'w').close()
+        Metro.initMetroFile(_path)
+        print("creat file success!")
 
 
 if __name__ == "__main__":

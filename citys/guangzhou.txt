@@ -1,4 +1,4 @@
-18
+34
 Huangcun
 Chebei
 Chebeinan
@@ -17,9 +17,25 @@ Tancun
 Tianhe Park
 Tangdong
 Daguannanlu
+Guanqiao
+Shiqi
+Haibang
+Dichong
+Dongchong
+Qingsheng
+Huangge
+Huangge Auto Town
+Jiaomen
+Jinzhou
+Feishajiao
+Guanglong
+Dachong
+Tangkeng
+Nanheng
+Nansha Passenger Port
 4
 Line 4
-8
+24
 Huangcun
 Chebei
 Chebeinan
@@ -28,6 +44,22 @@ Guanzhou
 Higher Education Mega Center N.
 Higher Education Mega Center S.
 Xinzao
+Guanqiao
+Shiqi
+Haibang
+Dichong
+Dongchong
+Qingsheng
+Huangge Auto Town
+Huangge
+Jiaomen
+Jinzhou
+Feishajiao
+Guanglong
+Dachong
+Tangkeng
+Nanheng
+Nansha Passenger Port
 Line 5
 5
 Dongpu
